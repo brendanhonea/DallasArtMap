@@ -1,0 +1,3 @@
+rootProject.name = 'DallasArtMap'
+
+include ':app'
