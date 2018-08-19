@@ -5,16 +5,32 @@ import {
   StyleSheet,
   Alert,
   TouchableHighlight,
+  TouchableOpacity,
   Image,
   Text
 } from "react-native";
+import SideMenu from "./components/SideMenu.js";
 
 export default class App extends Component<Props> {
-  _onPressButton() {
-    Alert.alert("works");
+  constructor(props) {
+    super(props);
+    this.toggleMenu = this.toggleMenu.bind(this)
+    this.state = {
+      menuOpen: false
+    };
+  }
+
+  toggleMenu() {
+    this.setState({ menuOpen: !this.state.menuOpen });
   }
 
   render() {
+    let menu = this.menuOpen ? (
+      <View style={styles.menu}>
+        <Text>SOME ANNOYING TEXT ON THE SCREEN</Text>
+      </View>
+    ) : null;
+
     return (
       <View style={styles.container}>
         <MapView
@@ -29,12 +45,13 @@ export default class App extends Component<Props> {
         >
           <Marker coordinate={artCo} title={"Deep Ellum Art Co"} />
         </MapView>
-          <TouchableHighlight
-            onPress={this._onPressButton}
-            underlayColor="white"
-          >
-            <Image source={require("./assets/menu2.png")} />
-          </TouchableHighlight>
+        <TouchableOpacity
+          onPress={this.toggleMenu}
+          style={styles.touchArea}
+        >
+          <Image source={require("./assets/menu2.png")} />
+        </TouchableOpacity>
+        {this.state.menuOpen && <SideMenu toggleMenu = {this.toggleMenu}/>}
       </View>
     );
   }
@@ -47,25 +64,20 @@ const artCo = {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    ...StyleSheet.absoluteFillObject
   },
   map: {
     ...StyleSheet.absoluteFillObject
   },
-  menuView: {
+  menu: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%"
+    top: 200,
+    left: 200
   },
-  menuButton: {
-    // backgroundColor: "black",
-    // flexDirection: "row",
-    // flex: 1
-    // paddingTop: 10,
-    // paddingLeft: 10
-    // width: '60px',
-    // marginLeft: 15,
+  touchArea: {
+    width: 36,
+    height: 36,
+    top: 15,
+    left: 15
   }
 });
