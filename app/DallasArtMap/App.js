@@ -7,16 +7,24 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   Image,
-  Text
+  Text,
+  AppRegistry
 } from "react-native";
 import SideMenu from "./components/SideMenu.js";
 
 export default class App extends Component<Props> {
   constructor(props) {
     super(props);
-    this.toggleMenu = this.toggleMenu.bind(this)
+
+    this.toggleMenu = this.toggleMenu.bind(this);
+    this.toggleAddModeOn = this.toggleAddModeOn.bind(this);
+    this.handleMapPress = this.handleMapPress.bind(this);
+
     this.state = {
-      menuOpen: false
+      menuOpen: false,
+      addMode: false,
+      markerCount: 1,
+      muralMarkers: []
     };
   }
 
@@ -24,34 +32,54 @@ export default class App extends Component<Props> {
     this.setState({ menuOpen: !this.state.menuOpen });
   }
 
-  render() {
-    let menu = this.menuOpen ? (
-      <View style={styles.menu}>
-        <Text>SOME ANNOYING TEXT ON THE SCREEN</Text>
-      </View>
-    ) : null;
+  toggleAddModeOn() {
+    this.toggleMenu();
+    this.setState({ addMode: true });
+  }
 
+  handleMapPress(event) {
+    if (this.state.addMode) {
+
+      //Adding new marker and turning off addMode
+      this.setState({
+        muralMarkers: [
+          ...this.state.muralMarkers,
+          {
+            coordinate: event.nativeEvent.coordinate
+          }
+        ],
+        addMode: false
+      });
+    }
+  }
+
+  render() {
     return (
       <View style={styles.container}>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
-          region={{
-            latitude: 32.78428,
-            longitude: -96.777388,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121
-          }}
+          region={artCo}
+          onPress={this.handleMapPress}
         >
-          <Marker coordinate={artCo} title={"Deep Ellum Art Co"} />
+          <Marker
+            coordinate={artCo}
+            title={"Deep Ellum Art Co"}
+            description={"this is art co"}
+          />
+          {this.state.muralMarkers.map(marker => {
+            return <Marker {...marker} />;
+          })}
         </MapView>
-        <TouchableOpacity
-          onPress={this.toggleMenu}
-          style={styles.touchArea}
-        >
+        <TouchableOpacity onPress={this.toggleMenu} style={styles.touchArea}>
           <Image source={require("./assets/menu2.png")} />
         </TouchableOpacity>
-        {this.state.menuOpen && <SideMenu toggleMenu = {this.toggleMenu}/>}
+        {this.state.menuOpen && (
+          <SideMenu
+            toggleMenu={this.toggleMenu}
+            toggleAddModeOn={this.toggleAddModeOn}
+          />
+        )}
       </View>
     );
   }
@@ -59,7 +87,9 @@ export default class App extends Component<Props> {
 
 const artCo = {
   latitude: 32.78428,
-  longitude: -96.777388
+  longitude: -96.777388,
+  latitudeDelta: 0.015,
+  longitudeDelta: 0.0121
 };
 
 const styles = StyleSheet.create({
@@ -81,3 +111,5 @@ const styles = StyleSheet.create({
     left: 15
   }
 });
+
+AppRegistry.registerComponent("App", () => App);

@@ -1,11 +1,18 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, AppRegistry } from "react-native";
 
 export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.sideDrawerContainer}>
-        <View style={styles.sideDrawer} />
+        <View style={styles.sideDrawer}>
+          <TouchableOpacity
+            onPress={this.props.toggleAddModeOn}
+            style={styles.addButton}
+            >
+            <Text style={styles.muralButton}>Add A Mural</Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
           onPress={this.props.toggleMenu}
           style={styles.mapTouch}
@@ -26,5 +33,14 @@ const styles = StyleSheet.create({
   },
   mapTouch: {
     flex: 0.3
+  },
+  addButton: {
+    flex: 0.45,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  muralButton: {
   }
 });
+
+AppRegistry.registerComponent('SideMenu', () => SideMenu);
