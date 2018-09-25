@@ -12,20 +12,22 @@ import {
 } from "react-native";
 import SideMenu from "./components/SideMenu.js";
 
-export default class App extends Component<Props> {
+export default class App extends Component {
   constructor(props) {
     super(props);
 
     this.toggleMenu = this.toggleMenu.bind(this);
     this.toggleAddModeOn = this.toggleAddModeOn.bind(this);
     this.handleMapPress = this.handleMapPress.bind(this);
+    this.initMap = this.initMap.bind(this);
 
     this.state = {
       menuOpen: false,
       addMode: false,
-      markerCount: 1,
       muralMarkers: []
     };
+
+    this.initMap();
   }
 
   toggleMenu() {
@@ -37,19 +39,47 @@ export default class App extends Component<Props> {
     this.setState({ addMode: true });
   }
 
+  initMap() {
+    fetch('http://10.0.2.2:8080/api/murals')
+      .then((response) => response.json())
+      .then((muralResponse) => {
+        this.setState({
+          muralMarkers: [...muralResponse]
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   handleMapPress(event) {
     if (this.state.addMode) {
-
       //Adding new marker and turning off addMode
-      this.setState({
-        muralMarkers: [
-          ...this.state.muralMarkers,
-          {
-            coordinate: event.nativeEvent.coordinate
-          }
-        ],
-        addMode: false
-      });
+
+      var newMural = {
+        coordinate: event.nativeEvent.coordinate,
+        title: "new mural",
+        description: "new artist"
+      };
+
+      fetch("http://10.0.2.2:8080/api/murals", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newMural)
+      })
+        .then(response => response.json())
+        .then(muralResponse => {
+          this.setState({
+            muralMarkers: [...this.state.muralMarkers, muralResponse],
+            addMode: false
+          });
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   }
 

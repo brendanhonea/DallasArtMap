@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, AppRegistry } from "react-native";
 
-export default class App extends Component<Props> {
+export default class App extends Component {
   render() {
     return (
       <View style={styles.sideDrawerContainer}>
