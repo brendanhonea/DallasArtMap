@@ -1,15 +1,6 @@
 import React, { Component } from "react";
+import { AppRegistry, Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import {
-  View,
-  StyleSheet,
-  Alert,
-  TouchableHighlight,
-  TouchableOpacity,
-  Image,
-  Text,
-  AppRegistry
-} from "react-native";
 import SideMenu from "./components/SideMenu.js";
 
 export default class App extends Component {
@@ -40,11 +31,11 @@ export default class App extends Component {
   }
 
   initMap() {
-    fetch('http://10.0.2.2:8080/api/murals')
+    fetch('http://192.168.1.83:3001/api/v1/murals')
       .then((response) => response.json())
       .then((muralResponse) => {
         this.setState({
-          muralMarkers: [...muralResponse]
+          muralMarkers: [...muralResponse.data]
         });
       })
       .catch((error) => {
@@ -57,12 +48,13 @@ export default class App extends Component {
       //Adding new marker and turning off addMode
 
       var newMural = {
-        coordinate: event.nativeEvent.coordinate,
-        title: "new mural",
+        latitude: event.nativeEvent.coordinate.latitude,
+        longitude: event.nativeEvent.coordinate.longitude,
+        title: "new mural" + Math.random() * 10000,
         description: "new artist"
       };
 
-      fetch("http://10.0.2.2:8080/api/murals", {
+      fetch("http://192.168.1.83:3001/api/v1/murals", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -72,8 +64,10 @@ export default class App extends Component {
       })
         .then(response => response.json())
         .then(muralResponse => {
+          console.log('Mural created: ' + muralResponse);
+         
           this.setState({
-            muralMarkers: [...this.state.muralMarkers, muralResponse],
+            muralMarkers: [...this.state.muralMarkers, muralResponse.mural],
             addMode: false
           });
         })
@@ -89,16 +83,30 @@ export default class App extends Component {
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
-          region={artCo}
+          region={{
+            latitude: 32.78428,
+            longitude: -96.777388,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.0121
+          }}
           onPress={this.handleMapPress}
         >
-          <Marker
-            coordinate={artCo}
-            title={"Deep Ellum Art Co"}
-            description={"this is art co"}
-          />
           {this.state.muralMarkers.map(marker => {
-            return <Marker {...marker} />;
+            if (!marker) {
+              return null;
+            }
+            
+            let coord = {
+              latitude: marker.latitude,
+              longitude: marker.longitude
+            }
+            return <Marker key={marker.id} {
+              ...{
+                title: marker.title,
+                description: marker.description,
+                coordinate: coord
+              }
+            }/>;
           })}
         </MapView>
         <TouchableOpacity onPress={this.toggleMenu} style={styles.touchArea}>
@@ -114,13 +122,6 @@ export default class App extends Component {
     );
   }
 }
-
-const artCo = {
-  latitude: 32.78428,
-  longitude: -96.777388,
-  latitudeDelta: 0.015,
-  longitudeDelta: 0.0121
-};
 
 const styles = StyleSheet.create({
   container: {
