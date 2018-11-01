@@ -1,7 +1,16 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, AppRegistry } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, AppRegistry, AsyncStorage } from "react-native";
 
-export default class App extends Component {
+export default class SideMenu extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  _logOut = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate('Auth');
+  }
+  
   render() {
     return (
       <View style={styles.sideDrawerContainer}>
@@ -11,6 +20,12 @@ export default class App extends Component {
             style={styles.addButton}
             >
             <Text style={styles.muralButton}>Add A Mural</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this._logOut}
+            style={styles.addButton}
+            >
+            <Text style={styles.muralButton}>Log Out</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity
