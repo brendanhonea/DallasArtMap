@@ -6,11 +6,15 @@ import AuthLoadingPage from "./components/AuthLoadingPage";
 
 const AppStack = createStackNavigator({
   ArtMap: { screen: ArtMap }
+},{ 
+  headerMode: 'none' 
 });
 
 const AuthStack = createStackNavigator({
   Login: { screen: Login }
-})
+},{ 
+  headerMode: 'none' 
+});
 
 export default createSwitchNavigator(
   {
