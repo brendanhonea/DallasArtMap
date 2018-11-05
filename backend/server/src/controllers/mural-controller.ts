@@ -3,7 +3,7 @@ import Mural from '../models/mural'
 import * as util from 'util'
 import { Model } from 'mongoose';
 
-export class MuralController {
+class MuralController {
     router: Router;
 
     constructor() {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AppRegistry, Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppRegistry, Image, StyleSheet, TouchableOpacity, View, AsyncStorage } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import SideMenu from "./SideMenu.js";
 
@@ -30,8 +30,14 @@ export default class ArtMap extends Component {
         this.setState({ addMode: true });
     }
 
-    initMap() {
-        fetch('http://192.168.0.159:3001/api/v1/murals')
+    async initMap() {
+        var AUTH_TOKEN = await AsyncStorage.getItem('userToken')
+        fetch('http://192.168.0.159:3001/api/v1/murals', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer ' + AUTH_TOKEN
+            }
+        })
             .then((response) => response.json())
             .then((muralResponse) => {
                 this.setState({
@@ -43,7 +49,7 @@ export default class ArtMap extends Component {
             });
     }
 
-    handleMapPress(event) {
+    async handleMapPress(event) {
         if (this.state.addMode) {
             //Adding new marker and turning off addMode
 
@@ -54,11 +60,13 @@ export default class ArtMap extends Component {
                 description: "new artist"
             };
 
+            var AUTH_TOKEN = await AsyncStorage.getItem('userToken')
             fetch("http://192.168.0.159:3001/api/v1/murals", {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    'Authorization': 'Bearer ' + AUTH_TOKEN
                 },
                 body: JSON.stringify(newMural)
             })

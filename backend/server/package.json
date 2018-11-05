@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "scripts": {
     "ts": "tsc -w",
-    "server": "nodemon ./build/index.js",
+    "server": "JWT_SECRET=superSecretKey nodemon ./build/index.js",
     "start": "tsc && node ./build/index.js",
     "test": "./node_modules/.bin/jasmine"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10",
     "mongoose": "^5.2.12"
   },
