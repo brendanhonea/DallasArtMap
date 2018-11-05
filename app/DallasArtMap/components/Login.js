@@ -65,7 +65,7 @@ export default class Login extends Component {
                         style={styles.loginButton}
                         onPress={this._login}
                     >
-                        <Text style={styles.loginBtnText}> Login </Text>
+                        <Text style={styles.loginBtnText}> LOGIN </Text>
                     </TouchableHighlight>
                 </View>
                 <Text style={styles.authText}>Not a member?</Text>
@@ -74,6 +74,7 @@ export default class Login extends Component {
         )
     }
 }
+
 
 
 const styles = StyleSheet.create({
@@ -112,15 +113,20 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         width: dims.width * .6,
-        height: dims.height * .1,
-        backgroundColor: '#4B88A2',
+        height: dims.height * .075,
+        backgroundColor: 'white',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderRadius: 8,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 15
     },
     loginBtnText: {
-        color: 'white',
-        fontSize: 26
+        color: '#4B88A2',
+        fontSize: 16,
+        letterSpacing: 5
     }
 });
 
