@@ -31,57 +31,52 @@ export default class ArtMap extends Component {
     }
 
     async initMap() {
-        var AUTH_TOKEN = await AsyncStorage.getItem('userToken')
-        fetch('http://192.168.0.159:3001/api/v1/murals', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Bearer ' + AUTH_TOKEN
-            }
-        })
-            .then((response) => response.json())
-            .then((muralResponse) => {
-                this.setState({
-                    muralMarkers: [...muralResponse.data]
-                });
-            })
-            .catch((error) => {
-                console.error(error);
+        try {
+            let AUTH_TOKEN = await AsyncStorage.getItem('userToken')
+            let muralsResponse = await fetch('http://192.168.0.159:3001/api/v1/murals', {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Bearer ' + AUTH_TOKEN
+                }
+            }).then((response) => response.json());
+
+            this.setState({
+                muralMarkers: [...muralsResponse]
             });
+        } catch (err) {
+            console.error('Error initializing map: ', err);
+        }
     }
 
     async handleMapPress(event) {
         if (this.state.addMode) {
             //Adding new marker and turning off addMode
-
-            var newMural = {
+            let newMural = {
                 latitude: event.nativeEvent.coordinate.latitude,
                 longitude: event.nativeEvent.coordinate.longitude,
                 title: "new mural" + Math.random() * 10000,
                 description: "new artist"
             };
 
-            var AUTH_TOKEN = await AsyncStorage.getItem('userToken')
-            fetch("http://192.168.0.159:3001/api/v1/murals", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    'Authorization': 'Bearer ' + AUTH_TOKEN
-                },
-                body: JSON.stringify(newMural)
-            })
-                .then(response => response.json())
-                .then(muralResponse => {
-                    console.log('Mural created: ' + muralResponse);
+            try {
+                let AUTH_TOKEN = await AsyncStorage.getItem('userToken')
+                let muralResponse = await fetch("http://192.168.0.159:3001/api/v1/murals", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        'Authorization': 'Bearer ' + AUTH_TOKEN
+                    },
+                    body: JSON.stringify(newMural)
+                }).then(response => response.json());
 
-                    this.setState({
-                        muralMarkers: [...this.state.muralMarkers, muralResponse.mural],
-                        addMode: false
-                    });
-                })
-                .catch(error => {
-                    console.error(error);
+                this.setState({
+                    muralMarkers: [...this.state.muralMarkers, muralResponse],
+                    addMode: false
                 });
+            } catch (err) {
+                console.error('Error adding new mural : ', err);
+            }
         }
     }
 

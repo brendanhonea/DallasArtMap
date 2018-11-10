@@ -15,24 +15,24 @@ export default class Login extends Component {
         }
     }
 
-    _login() {
+    async _login() {
         if (this.state.username.length > 3 && this.state.password.length > 3) {
-            fetch("http://192.168.0.159:3001/api/v1/auth/login", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                }
-            })
-                .then(response => response.json())
-                .then(async authRes => {
-                    await AsyncStorage.setItem('userToken', authRes.token);
-                    this.props.navigation.navigate('ArtMap');
+            try {
+                let authRes = await fetch("http://192.168.0.159:3001/api/v1/auth/login", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    }
                 })
-                .catch(error => {
-                    console.error(error);
-                });
-            
+                .then(response => response.json());
+
+                await AsyncStorage.setItem('userToken', authRes.token);
+                
+                this.props.navigation.navigate('ArtMap');
+            } catch (err) {
+                console.error(err);
+            }
         }
     }
 
