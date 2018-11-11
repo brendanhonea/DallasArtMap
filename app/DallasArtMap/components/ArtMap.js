@@ -38,10 +38,18 @@ export default class ArtMap extends Component {
                 headers: {
                     'Authorization': 'Bearer ' + AUTH_TOKEN
                 }
-            }).then((response) => response.json());
+            });
+
+            if (muralsResponse.status === 403) {
+                await AsyncStorage.clear();
+                this.props.navigation.navigate('Auth');
+                return;
+            }
+
+            const murals = await muralsResponse.json();
 
             this.setState({
-                muralMarkers: [...muralsResponse]
+                muralMarkers: [...murals]
             });
         } catch (err) {
             console.error('Error initializing map: ', err);
@@ -68,12 +76,20 @@ export default class ArtMap extends Component {
                         'Authorization': 'Bearer ' + AUTH_TOKEN
                     },
                     body: JSON.stringify(newMural)
-                }).then(response => response.json());
+                });
 
+                if (muralResponse.status === 403) {
+                    await AsyncStorage.clear();
+                    this.props.navigation.navigate('Auth');
+                    return;
+                }
+
+                const mural = await muralResponse.json();
                 this.setState({
-                    muralMarkers: [...this.state.muralMarkers, muralResponse],
+                    muralMarkers: [...this.state.muralMarkers, mural],
                     addMode: false
                 });
+                
             } catch (err) {
                 console.error('Error adding new mural : ', err);
             }

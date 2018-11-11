@@ -1,7 +1,7 @@
 import { Schema, Document, model } from 'mongoose';
 
 
-export interface IMuralModel extends Document {
+interface IMuralModel extends Document {
     createdAt: Date,
     updatedAt: Date,
     title: string,

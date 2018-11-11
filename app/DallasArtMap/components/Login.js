@@ -21,13 +21,27 @@ export default class Login extends Component {
                 let authRes = await fetch("http://192.168.0.159:3001/api/v1/auth/login", {
                     method: "POST",
                     headers: {
-                        Accept: "application/json",
+                        "Accept": "application/json",
                         "Content-Type": "application/json"
-                    }
-                })
-                .then(response => response.json());
+                    },
+                    body: JSON.stringify({
+                        "username": this.state.username,
+                        "password": this.state.password
+                    })
+                });
 
-                await AsyncStorage.setItem('userToken', authRes.token);
+                if (authRes.status !== 200) {
+                    this.setState({
+                        password: '',
+                        errorText: 'Invalid username or password'
+                    });
+
+                    return;
+                }
+
+                const token = await authRes.json();
+                console.log('here');
+                await AsyncStorage.setItem('userToken', token.token);
                 
                 this.props.navigation.navigate('ArtMap');
             } catch (err) {
@@ -60,7 +74,9 @@ export default class Login extends Component {
                         style={styles.authInput}
                         onChangeText={(password) => this.setState({ password })}
                         value={this.state.password}
+                        secureTextEntry={true}
                     />
+                    <Text style={styles.errorText}>{this.state.errorText}</Text>
                     <TouchableHighlight
                         style={styles.loginButton}
                         onPress={this._login}
@@ -68,7 +84,7 @@ export default class Login extends Component {
                         <Text style={styles.loginBtnText}> LOGIN </Text>
                     </TouchableHighlight>
                 </View>
-                <Text style={styles.authText}>Not a member?</Text>
+                <Text style={styles.authText}>Not a member? Sign Up!</Text>
 
             </KeyboardAwareScrollView>
         )
@@ -102,6 +118,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 8,
         borderWidth: 1
+    },
+    errorText: {
+        color: '#4B88A2',
+        fontSize: 14
     },
     authText: {
         color: 'white',
