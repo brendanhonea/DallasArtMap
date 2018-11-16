@@ -15,6 +15,10 @@ export default class Login extends Component {
         }
     }
 
+    navigateToCreateUser() {
+        this.props.navigation.navigate('CreateUser');
+    }
+
     async _login() {
         if (this.state.username.length > 3 && this.state.password.length > 3) {
             try {
@@ -40,7 +44,7 @@ export default class Login extends Component {
                 }
 
                 const token = await authRes.json();
-                console.log('here');
+                
                 await AsyncStorage.setItem('userToken', token.token);
                 
                 this.props.navigation.navigate('ArtMap');
@@ -84,7 +88,7 @@ export default class Login extends Component {
                         <Text style={styles.loginBtnText}> LOGIN </Text>
                     </TouchableHighlight>
                 </View>
-                <Text style={styles.authText}>Not a member? Sign Up!</Text>
+                <Text style={styles.authText} onPress={this.navigateToCreateUser()}>Not a member? Sign Up!</Text>
 
             </KeyboardAwareScrollView>
         )
