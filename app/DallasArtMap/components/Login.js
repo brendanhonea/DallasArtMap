@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     logo: {
-        height: dims.width/3,
+        height: dims.height/3,
         resizeMode: 'contain',
     },
     touchArea: {
