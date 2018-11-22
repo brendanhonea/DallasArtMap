@@ -33,7 +33,7 @@ export class AuthController {
                 return;
             }
 
-            jwt.sign({ username: user.username, role: user.role }, Config.JWT.SECRET, { expiresIn: '1h' }, (err, token) => {
+            jwt.sign({ username: user.username, role: user.role , id: user.id }, Config.JWT.SECRET, { expiresIn: '1h' }, (err, token) => {
                 if (!err) {
                     res.json({ token });
                 } else {

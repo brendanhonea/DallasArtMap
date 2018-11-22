@@ -45,11 +45,15 @@ export class MuralController {
         const title: string = req.body.title;
         const description: string = req.body.description;
 
+        const user: any = req.headers.authenticatedPrincipal;
+        const createdBy: string = user.id;
+
         const mural = new Mural({
             title,
             description,
             latitude,
-            longitude
+            longitude,
+            createdBy
         });
 
         try {

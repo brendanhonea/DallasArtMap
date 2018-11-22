@@ -34,6 +34,10 @@ let MuralSchema: Schema = new Schema({
         type: Number,
         default: '',
         required: true
+    },
+    createdBy: {
+        type: String,
+        required: true
     }
 });
 
