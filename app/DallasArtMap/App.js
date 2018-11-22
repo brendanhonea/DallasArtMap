@@ -1,8 +1,8 @@
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
-import ArtMap from './components/ArtMap';
-import Login from './components/Login';
-import CreateUser from './components/CreateUser';
-import AuthLoadingPage from "./components/AuthLoadingPage";
+import ArtMap from './src/components/ArtMap';
+import Login from './src/components/Login';
+import CreateUser from './src/components/CreateUser';
+import AuthLoadingPage from "./src/components/AuthLoadingPage";
 
 const AppStack = createStackNavigator({
   ArtMap: { screen: ArtMap }

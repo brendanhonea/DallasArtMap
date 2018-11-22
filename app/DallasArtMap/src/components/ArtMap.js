@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { AppRegistry, Image, StyleSheet, TouchableOpacity, View, AsyncStorage } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import SideMenu from "./SideMenu.js";
+import * as config from '../config/config';
 
 export default class ArtMap extends Component {
     constructor(props) {
@@ -33,7 +34,7 @@ export default class ArtMap extends Component {
     async initMap() {
         try {
             let AUTH_TOKEN = await AsyncStorage.getItem('userToken')
-            let muralsResponse = await fetch('http://192.168.0.159:3001/api/v1/murals', {
+            let muralsResponse = await fetch(`http://${config.SERVER_URL}/api/v1/murals`, {
                 method: "GET",
                 headers: {
                     'Authorization': 'Bearer ' + AUTH_TOKEN
@@ -68,7 +69,7 @@ export default class ArtMap extends Component {
 
             try {
                 let AUTH_TOKEN = await AsyncStorage.getItem('userToken')
-                let muralResponse = await fetch("http://192.168.0.159:3001/api/v1/murals", {
+                let muralResponse = await fetch(`http://${config.SERVER_URL}/api/v1/murals`, {
                     method: "POST",
                     headers: {
                         Accept: "application/json",
@@ -129,7 +130,7 @@ export default class ArtMap extends Component {
                     })}
                 </MapView>
                 <TouchableOpacity onPress={this.toggleMenu} style={styles.touchArea}>
-                    <Image source={require("../assets/menu2.png")} />
+                    <Image source={require("../../assets/menu2.png")} />
                 </TouchableOpacity>
                 {this.state.menuOpen && (
                     <SideMenu

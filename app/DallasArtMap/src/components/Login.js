@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { AppRegistry, StyleSheet, View, TouchableOpacity, Image, Text, AsyncStorage, TextInput, Dimensions, TouchableHighlight} from "react-native";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import * as config from '../config/config';
 
 var dims = Dimensions.get('window');
 
@@ -9,6 +10,8 @@ export default class Login extends Component {
         super(props);
 
         this._login = this._login.bind(this);
+        this.navigateToCreateUser = this.navigateToCreateUser.bind(this);
+        
         this.state = {
             username: '',
             password: ''
@@ -22,7 +25,7 @@ export default class Login extends Component {
     async _login() {
         if (this.state.username.length > 3 && this.state.password.length > 3) {
             try {
-                let authRes = await fetch("http://192.168.0.159:3001/api/v1/auth/login", {
+                let authRes = await fetch(`http://${config.SERVER_URL}/api/v1/auth/login`, {
                     method: "POST",
                     headers: {
                         "Accept": "application/json",
@@ -63,7 +66,7 @@ export default class Login extends Component {
             enableOnAndroid={true}
             >
                 <Image
-                    source={require('../assets/art_co_logo.png')}
+                    source={require('../../assets/art_co_logo.png')}
                     style={styles.logo}
                 />
                 <View style={styles.authInputWrapper}>
@@ -88,7 +91,7 @@ export default class Login extends Component {
                         <Text style={styles.loginBtnText}> LOGIN </Text>
                     </TouchableHighlight>
                 </View>
-                <Text style={styles.authText} onPress={this.navigateToCreateUser()}>Not a member? Sign Up!</Text>
+                <Text style={styles.authText} onPress={this.navigateToCreateUser}>Not a member? Sign Up!</Text>
 
             </KeyboardAwareScrollView>
         )

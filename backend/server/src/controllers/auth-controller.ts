@@ -4,7 +4,7 @@ import Config from '../config/config'
 import User from '../models/user'
 import { ErrorResponse } from '../models/responses/error-response';
 
-class AuthController {
+export class AuthController {
     router: Router;
 
     constructor() {

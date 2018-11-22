@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import * as _ from 'lodash';
 import { ErrorResponse } from '../models/responses/error-response';
 
-class MuralController {
+export class MuralController {
     router: Router;
 
     constructor() {
